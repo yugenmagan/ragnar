@@ -56,10 +56,9 @@
         ];
         let imagesLoadedCount = 0;
 
-        function loadGameImages(callback) {
-            if (imagesToLoad.length === 0) {
-                callback();
-                return;
+        function loadGameImages(() => {
+    ...
+    initGame(); //
             }
             imagesToLoad.forEach(imgData => {
                 const img = new Image();
