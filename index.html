@@ -404,27 +404,44 @@
         // ... мобильные контролы и остальной код ...
         
         // --- Инициализация игры после загрузки изображений ---
-        statusDiv.textContent = 'Загрузка изображений...';
-        resetButton.disabled = true; // Блокируем кнопку на время загрузки
-        loadGameImages(() => {
-            statusDiv.textContent = 'Готов сразиться с древними ящерами?';
-            resetButton.disabled = false; // Разблокируем кнопку
-            renderAchievementsList(); 
-            gameStarted = false; 
-            resetButton.textContent = 'Начать игру'; 
-            resetButton.style.display = 'block'; 
-            toggleAchievementsButton.style.display = 'inline-block';
-            draw(); // Первоначальная отрисовка стартового экрана
-            console.log("Script fully loaded and images processed. Waiting for user action.");
-        });
+statusDiv.textContent = 'Загрузка изображений...';
+resetButton.disabled = true;
 
-        resetButton.addEventListener('click', () => { 
-            if (!gameStarted && imagesLoadedCount < imagesToLoad.length && imagesToLoad.length > 0) {
-                alert("Изображения еще загружаются, подождите немного.");
-                return;
-            }
-            initGame(); 
-        });
+loadGameImages(() => {
+    statusDiv.textContent = 'Готов сразиться с древними ящерами?';
+    resetButton.disabled = false;
+    renderAchievementsList();
+    gameStarted = false;
+    resetButton.textContent = 'Начать игру';
+    resetButton.style.display = 'block';
+    toggleAchievementsButton.style.display = 'inline-block';
+
+    // Безопасная перерисовка
+    try {
+        draw();
+    } catch (e) {
+        console.warn('Ошибка при первичной отрисовке:', e);
+        statusDiv.textContent = '⚠ Ошибка при отрисовке. Проверь draw()';
+    }
+
+    console.log('[DEBUG] Images:', images);
+    console.log('[DEBUG] Canvas:', canvas);
+    console.log('[DEBUG] Context:', ctx);
+    console.log('[DEBUG] Player:', player);
+    console.log('[DEBUG] AF_ID:', animationFrameId);
+
+    // 👉 РАСКОММЕНТИРУЙ, если хочешь автостарт
+    // initGame();
+});
+
+resetButton.addEventListener('click', () => {
+    if (!gameStarted && imagesLoadedCount < imagesToLoad.length && imagesToLoad.length > 0) {
+        alert("Изображения ещё загружаются. Подожди немного.");
+        return;
+    }
+    initGame();
+});
+
     </script>
 </body>
 </html>
